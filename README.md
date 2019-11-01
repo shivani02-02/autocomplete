@@ -8,7 +8,9 @@ where input is the (partial) word that the user has typed so far. For example, i
 up procrastination, the service might receive this sequence of requests:
 
 GET /search?word=pro
+
 GET /search?word=procr
+
 GET /search?word=procra
 
 and so on.
@@ -16,7 +18,7 @@ and so on.
 The service is returning a response of JSON array containing upto 25 results, ranked by some criteria (see
 below).
 
-Constraints
+Constraints:
 1. Matches can occur anywhere in the string, not just at the beginning. For example, eryx should match archaeopteryx (among others).
 2. The ranking of results should satisfy the following:
   a. We assume that the user is typing the beginning of the word. Thus, matches at the start of a word should be ranked higher. For example, for the input pract, the result 
