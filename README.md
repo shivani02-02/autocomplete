@@ -37,7 +37,9 @@ RUNNING THE FLASK APPLICATION:
 
 2. Install Flask : pip install Flask
 
-3. Installing and running Flask App : 
+3. Install Flask-Cors : pip install Flask-Cors
+
+4. Installing and running Flask App : 
     Go to project directory and run the below commands to run the application on local host (Windows):
     
     set FLASK_APP=autocomplete.py
