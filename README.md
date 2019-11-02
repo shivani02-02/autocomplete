@@ -41,9 +41,10 @@ RUNNING THE FLASK APPLICATION:
     Go to project directory and run the below commands to run the application on local host (Windows):
     
     set FLASK_APP=autocomplete.py
+    
     flask run
     
-    Change <set> to <export> in order to run the project on linux. 
+    Change &lt;set&gt; to &lt;export&gt; in order to run the project on linux. 
     
     After running the commands please check the URL : http://localhost:5000/index to check the UI.
     
