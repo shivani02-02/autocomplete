@@ -45,6 +45,9 @@ RUNNING THE FLASK APPLICATION:
     
     Change <set> to <export> in order to run the project on linux. 
     
-    After running the commands please check the URL : http://localhost:5000/index to check the UI. 
-    Please Note : http://localhost:5000/ , this URL will take you to the Swagger UI as Swagger comes by-default with Flask Restplus f       framework. 
+    After running the commands please check the URL : http://localhost:5000/index to check the UI.
+    
+    Please Note : 
+    -------------
+    http://localhost:5000/ , this URL will take you to the Swagger UI as Swagger comes by-default with Flask Restplus framework. 
      
