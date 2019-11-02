@@ -46,7 +46,7 @@ class autocomplete(Resource):
             start_time = datetime.datetime.now()
             list_of_words=[]
             input_word = request.args['input']
-            print(input_word)
+#             print(input_word)
             input_related_words = logic.search_word(input_word.lower())
             words = logic.sorting(input_related_words, input_word.lower())
             if len(words)==0:
@@ -67,7 +67,7 @@ class autocomplete(Resource):
         end_time = datetime.datetime.now()
         time_elapsed = end_time - start_time 
         logger.info("API Response Time : " + str(time_elapsed))
-        print(list_of_words)
+#         print(list_of_words)
         return jsonify(results=list_of_words)
 
             
