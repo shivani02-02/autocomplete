@@ -17,6 +17,7 @@ CORS(app)
 
 api = Api(app, version='1.0', title='Autocomplete', description='World of Fuzzy Search')
 nm_space = api.namespace("", description="A restful web service that allow to do fuzzy search..!")
+
 logger=logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
@@ -25,9 +26,11 @@ fmt = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(fmt)
 logger.addHandler(ch)
 
+#created a parser to accept the user input, We can provide the input in the Swagger UI as well.
 parser = reqparse.RequestParser()
-parser.add_argument('word', type=str, help='Type the letter to see autocomplete feature..!')
+parser.add_argument('input', type=str, help='Type the letter to see autocomplete feature..!')
 
+# A GET request which accepts the user input and provides a json response containing top 25 matches based on ranking.
 @nm_space.route('/search')
 class autocomplete(Resource):
     @nm_space.expect(parser)
@@ -37,14 +40,14 @@ class autocomplete(Resource):
         try:
             start_time = datetime.datetime.now()
             list_of_words=[]
-            query = args['word']
-            if query == '':
-                return Response('We need a query string..!', status = 500, mimetype = 'application/json')
+            input = args['input']
+            if input == '':
+                return Response('We need a input string..!', status = 500, mimetype = 'application/json')
             else:
-                related_words = logic.search_word(query.lower())
-                words = logic.sorting(related_words, query.lower())
+                input_related_words = logic.search_word(input.lower())
+                words = logic.sorting(input_related_words, input.lower())
                 if len(words)==0:
-                    return Response('No words found..!', status = 500, mimetype = 'text/plain')
+                    return Response("{" + "\"Message\":\"No words found\"}", status = 404, mimetype = 'application/json')
                 for word in words :
                     list_of_words.append(word[0])
                 
@@ -60,34 +63,41 @@ class autocomplete(Resource):
         logger.info("API Response Time : " + str(time_elapsed))
         return Response(json.dumps(list_of_words), mimetype='application/json', status=200) 
             
-
-# @nm_space.route('/wordcount')
-# class show_word_freq(Resource):
-#     
-#     @nm_space.expect(parser)
-#     def get(self):
-#         args = parser.parse_args()
-#         try:
-#             start_time = datetime.datetime.now()
-#             list_of_words=[]
-#             query = args['word']
-#             if query == '':
-#                 return Response('We need a query string..!', status = 500, mimetype = 'application/json')
-#             else:
-#                 related_words = search_word(query.lower())
-#                 words = sorting(related_words, query.lower())
-#                 if len(words)==0:
-#                     return Response('No words found..!', status = 500, mimetype = 'text/plain')
-#                 for word in words :
-#                     list_of_words.append(word[0])
-#                     
-#         except Exception as e:
-#             end_time = datetime.datetime.now()
-#             time_elapsed = end_time - start_time
-#             logger.error('Some error occurred, please check logs : ' +str(e))
-#             logger.info("API Response Time (On Failure) : " + str(time_elapsed))
-#             return Response(str(e), mimetype='text/plain', status=500)
-#     
+# A Get request that takes user input and returns input string and its frequency as key value pair.
+@nm_space.route('/wordcount')
+class show_word_freq(Resource):
+      
+    @nm_space.expect(parser)
+    def get(self):
+        args = parser.parse_args()
+        logic = Logic()
+        dic = {}
+        try:
+            start_time = datetime.datetime.now()
+            input = args['input']
+            if input == '':
+                return Response('We need a input string..!', status = 500, mimetype = 'application/json')
+            else:
+                related_words = logic.search_word(input.lower())
+                words = logic.sorting(related_words, input.lower())
+                if len(words)==0:
+                    return Response('No words found..!', status = 404, mimetype = 'text/plain')
+                else:
+                    for tup in words :
+                        if input == tup[0]:
+                            dic[tup[0]] = tup[1]       
+        except Exception as e:
+            end_time = datetime.datetime.now()
+            time_elapsed = end_time - start_time
+            logger.error('Some error occurred, please check logs : ' +str(e))
+            logger.info("API Response Time (On Failure) : " + str(time_elapsed))
+            return Response(str(e), mimetype='text/plain', status=500)
+        
+        end_time = datetime.datetime.now()
+        time_elapsed = end_time - start_time 
+        logger.info("API Response Time : " + str(time_elapsed))
+        return Response(json.dumps(dic), status = 200, mimetype = 'application/json')
+                        
 
 if __name__ == '__main__':
     app.run(debug=True)
