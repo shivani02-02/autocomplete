@@ -46,7 +46,7 @@ RUNNING THE FLASK APPLICATION:
     
     flask run
     
-    Change &lt;set&gt; to &lt;export&gt; in order to run the project on linux. 
+    Note : Change &lt;set&gt; to &lt;export&gt; in order to run the project on linux. 
     
     After running the commands please check the URL : http://localhost:5000/index to check the UI.
     
